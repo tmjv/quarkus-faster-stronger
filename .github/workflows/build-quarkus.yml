@@ -3,9 +3,16 @@ name: Build Quarkus
 on:
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build-quarkus:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - uses: actions/checkout@v2
@@ -13,12 +20,33 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
       
-      - name: Build JVM and native image
+      - name: Go to correct directory
         run: |
           cd employee-quarkus
           echo 'current directory is:'
           pwd
-          ./build-mvn-docker.sh
+
+      - name: jvm standard build
+        run: |
+          mvn clean install
+          docker build . -f src/main/docker/Dockerfile.jvm -t quarkus-employee-jvm:0.0.2-SNAPSHOT
+      
+      - name: multi stage from scratch build
+        run: |
+          docker build . -f src/main/docker/Dockerfile.scratch.native -t quarkus-employee-native:0.0.2-SNAPSHOT-scratch
+
+      # https://docs.github.com/en/actions/guides/publishing-docker-images#publishing-images-to-github-packages
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: push to docker
+        run: |
+          docker push quarkus-employee-native:0.0.2-SNAPSHOT-scratch
+
 
       # - uses: DeLaGuardo/setup-graalvm@4.0
       #   with:
