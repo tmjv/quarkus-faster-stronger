@@ -1,4 +1,4 @@
-name: Build Quarkus
+name: Build Spring Boot JVM
 
 on:
   workflow_dispatch:
