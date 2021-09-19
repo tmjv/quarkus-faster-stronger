@@ -15,7 +15,10 @@ jobs:
       
       - name: Build JVM and native image
         run: |
-          employee-quarkus/build-mvn-docker.sh
+          cd employee-quarkus
+          echo 'current directory is:'
+          pwd
+          ./build-mvn-docker.sh
 
       # - uses: DeLaGuardo/setup-graalvm@4.0
       #   with:
