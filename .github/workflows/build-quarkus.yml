@@ -29,7 +29,8 @@ jobs:
       - name: multi stage from scratch build
         run: |
           cd employee-quarkus
-          docker build . -f src/main/docker/Dockerfile.scratch.native -t quarkus-employee-native:0.0.2-SNAPSHOT-scratch
+          # docker build . -f src/main/docker/Dockerfile.scratch.native -t quarkus-employee-native:0.0.2-SNAPSHOT-scratch
+          docker build . -f src/main/docker/Dockerfile.scratch.native -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:0.0.2-SNAPSHOT-QUARKUS
 
       # https://docs.github.com/en/actions/guides/publishing-docker-images#publishing-images-to-github-packages
       - name: Log in to the Container registry
@@ -41,7 +42,7 @@ jobs:
       
       - name: push to docker
         run: |
-          docker push quarkus-employee-native:0.0.2-SNAPSHOT-scratch
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:0.0.2-SNAPSHOT-QUARKUS
 
 
       # - uses: DeLaGuardo/setup-graalvm@4.0
