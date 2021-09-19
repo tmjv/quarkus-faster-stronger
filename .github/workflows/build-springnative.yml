@@ -8,7 +8,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-quarkus:
+  build-springboot-native:
     runs-on: ubuntu-latest
     permissions:
       contents: read
