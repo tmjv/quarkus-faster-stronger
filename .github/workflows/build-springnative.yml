@@ -43,7 +43,7 @@ jobs:
       - name: Build Docker Image
         run: |
           cd sb-employee-native
-          mvn clean spring-boot:build-image -DskipTests -Pspring-native,build-docker-image
+          mvn -e -X clean spring-boot:build-image -DskipTests -Pspring-native,build-docker-image
           echo 'listing docker images'
           docker image ls
 
